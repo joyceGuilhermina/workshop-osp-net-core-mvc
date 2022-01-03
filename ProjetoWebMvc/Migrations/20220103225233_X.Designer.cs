@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjetoWebMvc.Data;
 
 namespace ProjetoWebMvc.Migrations
 {
     [DbContext(typeof(ProjetoWebMvcContext))]
-    partial class ProjetoWebMvcContextModelSnapshot : ModelSnapshot
+    [Migration("20220103225233_X")]
+    partial class X
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

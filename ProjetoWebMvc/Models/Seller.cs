@@ -9,7 +9,6 @@ namespace ProjetoWebMvc.Models
         public int id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        public int MyProperty { get; set; }
         public DateTime Birthdate { get; set; }
         public double BaseSalary { get; set; }
         public Department Department { get; set; }
@@ -20,12 +19,11 @@ namespace ProjetoWebMvc.Models
         {
         }
 
-        public Seller(int id, string name, string email, int myProperty, DateTime birthdate, double baseSalary, Department department)
+        public Seller(int id, string name, string email, DateTime birthdate, double baseSalary, Department department)
         {
             this.id = id;
             Name = name;
             Email = email;
-            MyProperty = myProperty;
             Birthdate = birthdate;
             BaseSalary = baseSalary;
             Department = department;
