@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjetoWebMvc.Models;
+using ProjetoWebMvc.Models.ViewModels;
 using ProjetoWebMvc.Services;
 using System;
 using System.Collections.Generic;
@@ -11,10 +12,12 @@ namespace ProjetoWebMvc.Controllers
     public class SellersController : Controller
     {
         private readonly SellerService _SellerService;
+        private readonly DepartmentService _departmentService;
 
-        public SellersController(SellerService sellerService)
+        public SellersController(SellerService sellerService, DepartmentService departmentService)
         {
             _SellerService = sellerService;
+            _departmentService = departmentService;
         }
 
         public IActionResult Index()
@@ -26,7 +29,9 @@ namespace ProjetoWebMvc.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            var departments = _departmentService.FindAll();
+            var viewModel = new SellerFormViewMode { Departments = departments };
+            return View(viewModel);
         }
 
         [HttpPost]
