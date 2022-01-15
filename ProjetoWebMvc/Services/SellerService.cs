@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ProjetoWebMvc.Data;
 using ProjetoWebMvc.Models;
 using Microsoft.EntityFrameworkCore;
+using ProjetoWebMvc.Services.Exceptions;
 
 namespace ProjetoWebMvc.Services
 {
@@ -38,6 +39,24 @@ namespace ProjetoWebMvc.Services
             var obj = _context.Seller.Find(id);
             _context.Seller.Remove(obj);
             _context.SaveChanges();
-        } 
+        }
+
+        public void Update(Seller obj)
+        {
+            if (!_context.Seller.Any(x => x.id == obj.id))
+            {
+                throw new NotFoundException("id not found");
+
+            }
+            try
+            {
+                _context.Update(obj);
+                _context.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                throw new DbConcurrencyException(e.Message);
+            }
+        }
     }
 }
