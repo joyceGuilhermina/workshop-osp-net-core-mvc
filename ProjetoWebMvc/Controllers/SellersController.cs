@@ -7,7 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ProjetoWebMvc.Services.Exceptions;
-
+using ProjetoWebMvc.Models.viewModels;
+using System.Diagnostics;
 
 namespace ProjetoWebMvc.Controllers
 {
@@ -48,13 +49,13 @@ namespace ProjetoWebMvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "id not provided" });
             }
 
             var obj = _SellerService.FindById(id.Value);
             if(obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "id not found" });
             }
 
             return View(obj);
@@ -71,13 +72,13 @@ namespace ProjetoWebMvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "id not provided" });
             }
 
             var obj = _SellerService.FindById(id.Value);
             if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "id not found" });
             }
 
             return View(obj);
@@ -87,13 +88,13 @@ namespace ProjetoWebMvc.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "id not provided" });
             }
 
             var obj = _SellerService.FindById(id.Value);
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "id not found" });
             }
 
             List<Department> departments = _departmentService.FindAll();
@@ -106,21 +107,28 @@ namespace ProjetoWebMvc.Controllers
         {
             if (id != seller.id)
             {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { message = "id mismatch" });
             }
             try
             {
                 _SellerService.Update(seller);
                 return RedirectToAction(nameof(Index));
             }
-            catch (NotFoundException)
+            catch (ApplicationException e)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = e.Message });
             }
-            catch (DbConcurrencyException)
+           
+        }
+
+        public IActionResult Error(string message)
+        {
+            var ViewModel = new ErrorViewModel
             {
-                return BadRequest();
-            }
+                Message = message,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+            return View(ViewModel);
         }
     }
 }
