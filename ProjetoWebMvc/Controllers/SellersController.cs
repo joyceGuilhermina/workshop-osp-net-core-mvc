@@ -41,6 +41,12 @@ namespace ProjetoWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Seller seller)
         {
+            if(!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var ViewModel = new SellerFormViewMode { Seller = seller, Departments = departments };
+                return View(ViewModel);
+            }
             _SellerService.Insert(seller);
             return RedirectToAction(nameof(Index));
         }
@@ -105,6 +111,12 @@ namespace ProjetoWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Seller seller)
         {
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var ViewModel = new SellerFormViewMode { Seller = seller, Departments = departments };
+                return View(ViewModel);
+            }
             if (id != seller.id)
             {
                 return RedirectToAction(nameof(Error), new { message = "id mismatch" });
