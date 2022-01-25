@@ -23,42 +23,43 @@ namespace ProjetoWebMvc.Controllers
             _departmentService = departmentService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var list = _SellerService.FindAll();
+            var list = await _SellerService.FindAllAsync();
 
             return View(list);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var departments = _departmentService.FindAll();
+            
+            var departments = await _departmentService.FindAllAsync();
             var viewModel = new SellerFormViewMode { Departments = departments };
             return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Seller seller)
+        public async Task<IActionResult> Create(Seller seller)
         {
             if(!ModelState.IsValid)
             {
-                var departments = _departmentService.FindAll();
+                var departments = await _departmentService.FindAllAsync();
                 var ViewModel = new SellerFormViewMode { Seller = seller, Departments = departments };
                 return View(ViewModel);
             }
-            _SellerService.Insert(seller);
+            await _SellerService.InsertAsync(seller);
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "id not provided" });
             }
 
-            var obj = _SellerService.FindById(id.Value);
+            var obj = await _SellerService.FindByIdAsync(id.Value);
             if(obj == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "id not found" });
@@ -68,20 +69,20 @@ namespace ProjetoWebMvc.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _SellerService.Remove(id);
+            await _SellerService.RemoveAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Details(int ? id)
+        public async Task<IActionResult> Details(int ? id)
         {
             if (id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "id not provided" });
             }
 
-            var obj = _SellerService.FindById(id.Value);
+            var obj = await _SellerService.FindByIdAsync(id.Value);
             if (obj == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "id not found" });
@@ -90,30 +91,30 @@ namespace ProjetoWebMvc.Controllers
             return View(obj);
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "id not provided" });
             }
 
-            var obj = _SellerService.FindById(id.Value);
+            var obj = await _SellerService.FindByIdAsync(id.Value);
             if (id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "id not found" });
             }
 
-            List<Department> departments = _departmentService.FindAll();
+            List<Department> departments = await _departmentService.FindAllAsync();
             SellerFormViewMode viewMode = new SellerFormViewMode { Seller = obj, Departments = departments };
             return View(viewMode);
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Seller seller)
+        public async Task<IActionResult> Edit(int id, Seller seller)
         {
             if (!ModelState.IsValid)
             {
-                var departments = _departmentService.FindAll();
+                var departments = await _departmentService.FindAllAsync();
                 var ViewModel = new SellerFormViewMode { Seller = seller, Departments = departments };
                 return View(ViewModel);
             }
@@ -123,7 +124,7 @@ namespace ProjetoWebMvc.Controllers
             }
             try
             {
-                _SellerService.Update(seller);
+               await _SellerService.UpdateAsync(seller);
                 return RedirectToAction(nameof(Index));
             }
             catch (ApplicationException e)
