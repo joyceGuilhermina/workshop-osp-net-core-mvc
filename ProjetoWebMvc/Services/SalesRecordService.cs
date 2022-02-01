@@ -34,5 +34,24 @@ namespace ProjetoWebMvc.Services
                 .OrderByDescending(X => X.Date)
                 .ToListAsync();
         }
+        public async Task<List<IGrouping<Department,SalesRecord>>> FindByDateGroupingAsync(DateTime? minDate, DateTime? maxDate)
+        {
+            var result = from obj in _context.salesRecords select obj;
+            if (minDate.HasValue)
+            {
+                result = result.Where(x => x.Date >= minDate.Value);
+            }
+            if (maxDate.HasValue)
+            {
+                result = result.Where(x => x.Date <= maxDate.Value);
+            }
+            return await result
+                .Include(x => x.Seller)
+                .Include(X => X.Seller.Department)
+                .OrderByDescending(X => X.Date)
+                .GroupBy(x => x.Seller.Department)
+                .ToListAsync();
+        }
+
     }
 }
